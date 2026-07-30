@@ -1,0 +1,69 @@
+﻿# ─── Python ───────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# ─── Virtual environments ─────────────────────────────────────────────────────
+venv/
+.venv/
+env/
+.env/
+ENV/
+
+# ─── Testing & coverage ───────────────────────────────────────────────────────
+.pytest_cache/
+.coverage
+htmlcov/
+coverage.xml
+*.coveragerc
+
+# ─── Data & generated outputs ────────────────────────────────────────────────
+data/
+outputs/
+*.png
+*.jpg
+*.jpeg
+*.bmp
+*.tif
+*.tiff
+
+# ─── Model weights & checkpoints ─────────────────────────────────────────────
+checkpoints/
+*.pth
+*.pt
+*.ckpt
+*.pkl
+*.h5
+
+# ─── Experiment logs ─────────────────────────────────────────────────────────
+outputs/experiment.csv
+*.csv
+
+# ─── Node / JS (doc generators) ──────────────────────────────────────────────
+node_modules/
+package-lock.json
+
+# ─── IDE & OS ─────────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*.swo
+*~
+
+# ─── Jupyter ──────────────────────────────────────────────────────────────────
+.ipynb_checkpoints/
+*.ipynb
+
+# ─── Mypy ─────────────────────────────────────────────────────────────────────
+.mypy_cache/
