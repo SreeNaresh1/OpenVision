@@ -1,0 +1,38 @@
+schema_version: "1.0.0"
+# Preset: sr_x2
+# Super-resolution at ×2 scale — milder than ×4, good warm-up experiment.
+# Run with: python scripts/preview_pairs.py --config configs/sr_x2.yaml
+
+task: sr
+scale: 2
+patch_size: 128               # clean (HR) patch size; LR will be 64×64
+
+geometric_augmentation:
+  horizontal_flip_p: 0.5
+  vertical_flip_p: 0.5
+  rotate90_p: 0.5
+
+degradation:
+  gaussian_noise:
+    enabled: true
+    p: 0.7
+    sigma_range: [0.02, 0.05]
+
+  poisson_noise:
+    enabled: true
+    p: 0.4
+    peak_range: [15, 40]
+
+  blur:
+    enabled: true
+    p: 0.6
+    types: [gaussian, motion]
+    gaussian_blur_limit: [3, 5]
+    motion_blur_limit: [3, 7]
+
+  # For ×2 SR, bicubic / bilinear are both common in the literature.
+  downsample_interpolation: [bicubic, bilinear]
+
+normalization:
+  mean: 0.5
+  std: 0.5

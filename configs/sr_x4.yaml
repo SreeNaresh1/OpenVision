@@ -1,0 +1,39 @@
+schema_version: "1.0.0"
+# Preset: sr_x4
+# Super-resolution at ×4 scale — primary hackathon SR subtask.
+# Run with: python scripts/preview_pairs.py --config configs/sr_x4.yaml
+
+task: sr
+scale: 4
+patch_size: 128               # clean (HR) patch size; LR will be 32×32
+
+geometric_augmentation:
+  horizontal_flip_p: 0.5
+  vertical_flip_p: 0.5
+  rotate90_p: 0.5
+
+degradation:
+  gaussian_noise:
+    enabled: true
+    p: 0.8
+    sigma_range: [0.02, 0.06]
+
+  poisson_noise:
+    enabled: true
+    p: 0.5
+    peak_range: [8, 40]
+
+  blur:
+    enabled: true
+    p: 0.7
+    types: [gaussian, motion]
+    gaussian_blur_limit: [3, 7]
+    motion_blur_limit: [3, 9]
+
+  # Random interpolation kernel stops the model from overfitting to one
+  # specific downsampling filter, which is especially important at ×4.
+  downsample_interpolation: [bicubic, bilinear, area]
+
+normalization:
+  mean: 0.5
+  std: 0.5

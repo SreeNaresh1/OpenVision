@@ -1,0 +1,37 @@
+schema_version: "1.0.0"
+# Preset: denoise_medium
+# Balanced mix of Gaussian + Poisson noise with occasional blur.
+# Recommended first experiment for the denoising subtask.
+# Run with: python scripts/preview_pairs.py --config configs/denoise_medium.yaml
+
+task: denoise
+patch_size: 128
+
+geometric_augmentation:
+  horizontal_flip_p: 0.5
+  vertical_flip_p: 0.5
+  rotate90_p: 0.5
+
+degradation:
+  gaussian_noise:
+    enabled: true
+    p: 0.8
+    sigma_range: [0.02, 0.06]   # mid-range — matches published wafer-TEM noise studies
+
+  poisson_noise:
+    enabled: true
+    p: 0.5
+    peak_range: [12, 35]
+
+  blur:
+    enabled: true
+    p: 0.4                      # occasional blur
+    types: [gaussian, motion]
+    gaussian_blur_limit: [3, 5]
+    motion_blur_limit: [3, 5]
+
+  downsample_interpolation: [bicubic]
+
+normalization:
+  mean: 0.5
+  std: 0.5

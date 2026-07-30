@@ -1,0 +1,36 @@
+schema_version: "1.0.0"
+# Preset: denoise_light
+# Very mild noise only — good starting point for high-quality input imagery.
+# Run with: python scripts/preview_pairs.py --config configs/denoise_light.yaml
+
+task: denoise
+patch_size: 128
+
+geometric_augmentation:
+  horizontal_flip_p: 0.5
+  vertical_flip_p: 0.5
+  rotate90_p: 0.5
+
+degradation:
+  gaussian_noise:
+    enabled: true
+    p: 0.6
+    sigma_range: [0.01, 0.03]   # very low noise level
+
+  poisson_noise:
+    enabled: true
+    p: 0.3
+    peak_range: [30, 60]        # high peak = less shot noise
+
+  blur:
+    enabled: false              # no blur for light preset
+    p: 0.0
+    types: [gaussian]
+    gaussian_blur_limit: [3, 3]
+    motion_blur_limit: [3, 3]
+
+  downsample_interpolation: [bicubic]
+
+normalization:
+  mean: 0.5
+  std: 0.5

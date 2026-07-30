@@ -1,0 +1,58 @@
+# Synthetic degradation config for Track 1 (KLA) — wafer inspection image restoration.
+#
+# Maps directly to the degradation sources named in the problem statement:
+#   sensor noise      -> gaussian_noise + poisson_noise
+#   low light         -> poisson_noise (shot noise dominates at low photon/electron counts)
+#   vibration          -> blur.motion
+#   fast scanning      -> blur.motion
+#   optical limitations -> blur.gaussian
+#
+# task: "denoise" -> degraded and clean are the same resolution.
+# task: "sr"      -> degraded is downsampled by `scale` after noise/blur, clean stays full-res.
+# Switch this one field to reuse the same pipeline for both hackathon subtasks.
+schema_version: "1.0.0"   # bump when any field is added, renamed, or removed
+
+task: sr
+scale: 4          # only used when task == sr
+patch_size: 128   # size of the clean patch cropped from the source image (HR reference size)
+
+# Applied to the clean patch BEFORE degradation, so degraded/clean stay pixel-aligned.
+geometric_augmentation:
+  horizontal_flip_p: 0.5
+  vertical_flip_p: 0.5
+  rotate90_p: 0.5
+
+# Applied in this order: gaussian_noise -> poisson_noise -> blur -> (downsample if task == sr)
+degradation:
+  gaussian_noise:
+    enabled: true
+    p: 0.8
+    # std in normalized [0,1] units. 0.02-0.06 ~= 5-15 out of 255.
+    # Published wafer-TEM noise studies use variances in the 30-90 range on a 0-255
+    # scale (std ~5.5-9.5, i.e. ~0.02-0.037 normalized) — start here, retune after
+    # visually comparing against real sample images in Sprint 1.5.
+    sigma_range: [0.02, 0.06]
+
+  poisson_noise:
+    enabled: true
+    p: 0.5
+    # "peak" = effective photon/electron count. Lower peak = noisier (low-light regime).
+    peak_range: [8, 40]
+
+  blur:
+    enabled: true
+    p: 0.7
+    types: [gaussian, motion]      # randomly chosen per sample
+    gaussian_blur_limit: [3, 7]    # odd kernel sizes only
+    motion_blur_limit: [3, 9]      # odd kernel sizes only
+
+  # Only used when task == sr. Randomly picked per sample so the model doesn't
+  # overfit to one specific downsampling kernel.
+  downsample_interpolation: [bicubic, bilinear, area]
+
+normalization:
+  # Images are produced in [0,1] float32; apply this in the training loop if your
+  # model expects zero-centered input. Left out of the dataset itself so both
+  # DnCNN-style ([0,1]) and other conventions can share this pipeline.
+  mean: 0.5
+  std: 0.5

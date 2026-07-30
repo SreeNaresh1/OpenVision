@@ -1,0 +1,37 @@
+schema_version: "1.0.0"
+# Preset: denoise_heavy
+# Aggressive noise + frequent blur — simulates very low-light / fast-scan SEM.
+# Use to stress-test model robustness, not as the primary training regime.
+# Run with: python scripts/preview_pairs.py --config configs/denoise_heavy.yaml
+
+task: denoise
+patch_size: 128
+
+geometric_augmentation:
+  horizontal_flip_p: 0.5
+  vertical_flip_p: 0.5
+  rotate90_p: 0.5
+
+degradation:
+  gaussian_noise:
+    enabled: true
+    p: 1.0                      # always applied in heavy mode
+    sigma_range: [0.06, 0.12]   # high noise level
+
+  poisson_noise:
+    enabled: true
+    p: 0.8
+    peak_range: [4, 12]         # very low peak = severe shot noise (extreme low-light)
+
+  blur:
+    enabled: true
+    p: 0.8                      # frequent blur
+    types: [gaussian, motion]
+    gaussian_blur_limit: [5, 9]
+    motion_blur_limit: [5, 11]
+
+  downsample_interpolation: [bicubic]
+
+normalization:
+  mean: 0.5
+  std: 0.5
