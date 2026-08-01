@@ -6,7 +6,6 @@
 
 Denoising · Super-Resolution · Reproducible ML Pipeline
 
-[![CI](https://github.com/SreeNaresh1/OpenVision/actions/workflows/ci.yml/badge.svg)](https://github.com/SreeNaresh1/OpenVision/actions)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue?logo=python&logoColor=white)](https://www.python.org/)
 [![PyTorch 2.1+](https://img.shields.io/badge/pytorch-2.1%2B-EE4C2C?logo=pytorch&logoColor=white)](https://pytorch.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-22c55e.svg)](LICENSE)
